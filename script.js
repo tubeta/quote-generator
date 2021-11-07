@@ -5,14 +5,30 @@ const quoteText        = document.getElementById('quote');
 const authorName        = document.getElementById('author');
 const twitterBtn        = document.getElementById('twitter');
 const newQuoteBtn        = document.getElementById('new-quote');
-
+const loader            = document.getElementById('loader');
 
 
 // Global variables
 let apiQuotes = [];
 
+// Loading...
+function loading() {
+    loader.hidden = false;
+    quoteContainer.hidden = true;
+    console.log('Loading...');
+}
+
+// Loading complete...
+
+function loadingComplete() {
+    quoteContainer.hidden = false;
+    loader.hidden = true;
+    console.log('Loading completed...');
+}
 // show new quote
 function newQuote(){
+    // Call loading function
+    loading();
     // select a quote from the array of quotes
     const quote = apiQuotes[Math.floor(Math.random()*apiQuotes.length)];
     console.log(quote);
@@ -29,6 +45,8 @@ function newQuote(){
     } else {
         quoteText.classList.remove('long-quote');
     }
+    // call loadingComplete function
+    loadingComplete();
     quoteText.textContent = quote.text;
     
 }
@@ -48,7 +66,17 @@ async function getQuotes() {
 
 }
 
+// Tweet the quote
+function tweetQuote() {
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${quoteText.textContent} - ${authorName.textContent}`;
+    window.open(twitterUrl, '_blank'); 
+}
 
-    // On Load...
 
-    getQuotes();
+// Event listeners
+newQuoteBtn.addEventListener('click', newQuote);
+twitterBtn.addEventListener('click', tweetQuote);
+
+// On Load...
+// loading();
+getQuotes();
